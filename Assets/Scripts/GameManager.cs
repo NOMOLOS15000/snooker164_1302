@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,6 +13,9 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     private GameObject[] ballPrefab;
+
+    [SerializeField]
+    private GameObject cueBall;
     void Awake()
     {
         instance = this;
@@ -34,7 +38,8 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(Keyboard.current.spaceKey.wasPressedThisFrame)
+            ShootBall();
     }
 
     private void SetBall(BallColor col, int i)
@@ -52,6 +57,12 @@ public class GameManager : MonoBehaviour
         Ball b = obj.GetComponent<Ball>();
         b.SetColorAndPoint(col);
     
+    }
+
+    private void ShootBall()
+    {
+        Rigidbody rd = cueBall.GetComponent<Rigidbody>();
+        rd.AddRelativeForce(Vector3.forward * 50, ForceMode.Impulse);
     }
 
 }
