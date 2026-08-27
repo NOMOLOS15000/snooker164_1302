@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -21,7 +23,13 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     private GameObject ballLine;
+    [SerializeField]
+    private GameObject Gameoverscreen;
 
+    [SerializeField]
+    private TMP_Text notitext;
+
+    private bool Gameover = false;
     public static GameManager instance;
 
     void Awake()
@@ -61,6 +69,13 @@ public class GameManager : MonoBehaviour
 
         else
             xInput = 0f;
+
+        if (Keyboard.current.rKey.wasPressedThisFrame && Gameover == true)
+        {   
+            Time.timeScale = 1f;
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+            
     }
 
     private void SetBall(BallColor col, int i)
@@ -97,6 +112,49 @@ public class GameManager : MonoBehaviour
 
         ballLine.SetActive(true);
     }
-    
 
+    public void SaveGame()
+    {
+        StopBall();
+        if (cueBall != null)
+        {
+            PlayerPrefs.SetFloat("cueBallPosX", cueBall.transform.position.x);
+            PlayerPrefs.SetFloat("cueBAllPosY", cueBall.transform.position.y);
+            PlayerPrefs.SetFloat("cueBallPosZ", cueBall.transform.position.z);
+        }
+
+        Debug.Log("Saved");
+    }
+
+    public void LoadGame()
+    {
+        StopBall();
+        if (cueBall != null)
+        {
+            PlayerPrefs.SetFloat("cueBallPosX", cueBall.transform.position.x);
+            PlayerPrefs.SetFloat("cueBAllPosY", cueBall.transform.position.y);
+            PlayerPrefs.SetFloat("cueBallPosZ", cueBall.transform.position.z);
+        }
+
+        Debug.Log("Saved");
+    }
+
+    public void ShowNotText(int i)
+    {
+        PlayerScore += i;
+        notitext.text = string.Format("Total Point : {0} \n Scored {1} Point",playerScore, i.ToString());
+    }
+
+
+    public void ShowString(string text)
+    {
+        notitext.text = text;
+    }
+
+    public void ShowGameoverScreen()
+    {
+        Gameoverscreen.SetActive(true);
+        Gameover = true;
+        Time.timeScale = 0f;
+    }
 }

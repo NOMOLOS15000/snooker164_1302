@@ -7,10 +7,14 @@ public class Hole : MonoBehaviour
     {
         Ball b = other.GetComponent<Ball>();
 
-        if (b != null)
+        if (b != null && b.Point > 0)
         {
-            GameManager.instance.PlayerScore += b.Point;
+            GameManager.instance.ShowNotText(b.Point);
             Destroy(b.gameObject);
+        }
+        else
+        {
+            GameManager.instance.ShowGameoverScreen();
         }
     }
 
